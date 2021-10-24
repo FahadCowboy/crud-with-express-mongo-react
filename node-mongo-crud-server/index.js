@@ -28,6 +28,15 @@ async function run() {
          res.send(users)
       })
 
+      app.get('/users/:id', async (req, res) => {
+         const id = req.params.id
+         const query = { _id: ObjectId(id) }
+         const user = await usersCollection.findOne(query)
+         console.log('Hitting the api for the id:' , id)
+         console.log('Responded as: ', user)
+         res.send(user)
+      })
+
       // POST API
       app.post('/users', async(req, res) => {
          const newUser = req.body
@@ -47,13 +56,20 @@ async function run() {
       })
 
       //UPDATE API
-      app.get('/users/:id', async (req, res) => {
+      app.put('/users/:id', async (req, res) => {
          const id = req.params.id
-         const query = { _id: ObjectId(id) }
-         const user = await usersCollection.findOne(query)
-         console.log('Hitting the api for the id:' , id)
-         console.log('Responded as: ', user)
-         res.send(user)
+         const updatedUser = req.body
+         const filter = {_id: ObjectId(id)}
+         const options = { upsert: true };
+         const updateDoc = {
+            $set: {
+              name: updatedUser.name,
+              email: updatedUser.email
+            },
+          };
+         const result = await usersCollection.updateOne(filter, updateDoc, options)
+         console.log('This API is got hitted for id: ', id)
+         res.json(result)
       })
       
       // console.log('A user is sent to database.')
