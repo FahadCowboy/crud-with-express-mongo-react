@@ -1,6 +1,3 @@
-// firstmongodbuser
-// y2yxiH2pg2MEGQrX
-
 const { MongoClient } = require('mongodb');
 const express = require('express')
 const cors = require('cors')
